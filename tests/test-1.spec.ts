@@ -24,7 +24,7 @@ test('test', async ({ page, context }) => {
     client.messages.create({
       body: 'Seethamma Vakitlo Sirimalle Chettu is now available at Sandhya Theatre RGB Laser on Friday 7th.',
       from: '+15075854277',
-      to: '+919133626880'
+      to: '+916309649279'
     }).then(message => console.log(`Message sent: ${message.sid}`))
       .catch(error => console.error(`Failed to send message: ${error}`));
   } else {
