@@ -3,15 +3,39 @@ name: Playwright Movie Check
 on:
   schedule:
     - cron: "0 * * * *"  # Runs every hour (UTC)
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   run-playwright-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install dependencies
         run: npm install
-      - name: Install Playwright
-        run: npx playwright install
-      - name: Run Playwright test
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
         run: npx playwright test
+
+      - name: Upload Playwright test results
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-results
+          path: test-results/
