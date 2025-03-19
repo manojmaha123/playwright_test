@@ -1,5 +1,4 @@
 name: Playwright Movie Check
-
 on:
   repository_dispatch:
   schedule:
