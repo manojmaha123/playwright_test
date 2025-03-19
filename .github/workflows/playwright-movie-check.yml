@@ -30,15 +30,16 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright Tests
+      - name: Run Playwright Tests (Suppress Console Output)
         run: |
-          npx playwright test --reporter=junit > playwright-output.log 2>&1
+          mkdir -p test-results
+          npx playwright test --reporter=dot | tee test-results/playwright-console.log > /dev/null
 
-      - name: Upload Playwright Test Logs
+      - name: Upload Playwright Console Output
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-logs
-          path: playwright-output.log
+          name: playwright-console
+          path: test-results/playwright-console.log
 
       - name: Upload Playwright Test Results (if failed)
         if: failure()
