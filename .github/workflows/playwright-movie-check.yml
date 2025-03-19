@@ -8,7 +8,7 @@ on:
   workflow_run:
     workflows: ["Playwright Movie Check"]
     types:
-      - completed  # Re-run if manually triggered
+      - completed  # Retry if the last run fails
 
 jobs:
   run-playwright-test:
@@ -31,7 +31,14 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright Tests
-        run: npx playwright test --reporter=dot | tee playwright-output.log
+        run: |
+          npx playwright test --reporter=junit > playwright-output.log 2>&1
+
+      - name: Upload Playwright Test Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-logs
+          path: playwright-output.log
 
       - name: Upload Playwright Test Results (if failed)
         if: failure()
@@ -39,9 +46,3 @@ jobs:
         with:
           name: playwright-results
           path: test-results/
-
-      - name: Upload Playwright Logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-logs
-          path: playwright-output.log
