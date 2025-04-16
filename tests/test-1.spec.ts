@@ -11,7 +11,7 @@ test('test', async ({ page, context }) => {
   await page.waitForLoadState('networkidle');
   const buyTicketsButtons = await page.locator('button', { hasText: 'BUY TICKETS' }).count();
   
-  if (buyTicketsButtons >= 3) {
+  if (buyTicketsButtons >= 2) {
     client.calls.create({
       twiml: '<Response><Say>RCB tickets are now available. Hurry up and book your tickets now.</Say></Response>',
       from: '+15075854277',
